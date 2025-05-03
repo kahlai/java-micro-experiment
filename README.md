@@ -12,29 +12,6 @@ The more things we pack inside a container image and deploy in production enviro
 ├── Dockerfile.native - Docker file to build sample quarkus native executable app
 ├── README.md
 └── code-with-quarkus - Folder container sample quarkus REST application
-    ├── README.md
-    ├── mvnw
-    ├── mvnw.cmd
-    ├── pom.xml
-    └── src
-        ├── main
-        │   ├── docker
-        │   │   ├── Dockerfile.jvm
-        │   │   ├── Dockerfile.legacy-jar
-        │   │   ├── Dockerfile.native
-        │   │   └── Dockerfile.native-micro
-        │   ├── java
-        │   │   └── org
-        │   │       └── acme
-        │   │           └── GreetingResource.java
-        │   └── resources
-        │       └── application.properties
-        └── test
-            └── java
-                └── org
-                    └── acme
-                        ├── GreetingResourceIT.java
-                        └── GreetingResourceTest.java
 ```
 
 ## Steps to reproduce the experiment. 
