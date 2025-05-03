@@ -48,6 +48,7 @@ quay.io/kahlai/java-micro                             ubi9                 434cd
 Smaller compare to:
 ```
 registry.access.redhat.com/ubi8/openjdk-21            latest               80be32f2c910   2 weeks ago    431MB
+registry.access.redhat.com/ubi9/openjdk-21-runtime    latest               05cd510cc015   4 days ago     381MB
 ```
 
 5. Build the code to test the images with JRE only.
@@ -89,6 +90,7 @@ Example Output:
 Hello from Quarkus REST%
 ```
 
+
 ### Build and run quarkus app using Native Compilation
 
 1. Build the code to test the images with Native Compilation.
@@ -121,6 +123,105 @@ __  ____  __  _____   ___  __ ____  ______
 2025-05-03 01:26:06,259 INFO  [io.quarkus] (main) code-with-quarkus 1.0.0-SNAPSHOT native (powered by Quarkus 3.21.3) started in 0.296s. Listening on: http://0.0.0.0:8080
 2025-05-03 01:26:06,267 INFO  [io.quarkus] (main) Profile prod activated. 
 2025-05-03 01:26:06,267 INFO  [io.quarkus] (main) Installed features: [cdi, rest, smallrye-context-propagation, vertx]
+```
+
+
+## Comparing the docker scout scan result
+
+8. Scan CVE using docker scout
+
+For ubi9 micro + jre
+```
+docker scout cves quay.io/kahlai/java-micro:ubi9
+
+    ✓ SBOM of image already cached, 29 packages indexed
+    ✓ No vulnerable package detected
+
+
+## Overview
+
+                    │          Analyzed Image           
+────────────────────┼───────────────────────────────────
+  Target            │  quay.io/kahlai/java-micro:ubi9   
+    digest          │  434cd5214844                     
+    platform        │ linux/amd64                       
+    vulnerabilities │    0C     0H     0M     0L        
+    size            │ 68 MB                             
+    packages        │ 29 
+```
+
+For red hat official ubi9 openjdk21
+```
+docker scout cves registry.access.redhat.com/ubi9/openjdk-21-runtime:latest
+    ✓ Image stored for indexing
+    ✓ Indexed 170 packages
+    ✓ No vulnerable package detected
+
+
+## Overview
+
+                    │                       Analyzed Image                         
+────────────────────┼──────────────────────────────────────────────────────────────
+  Target            │  registry.access.redhat.com/ubi9/openjdk-21-runtime:latest   
+    digest          │  05cd510cc015                                                
+    platform        │ linux/amd64                                                  
+    vulnerabilities │    0C     0H     0M     0L                                   
+    size            │ 148 MB                                                       
+    packages        │ 170
+```
+
+For red hat official ubi8 openjdk21
+```
+docker scout cves registry.access.redhat.com/ubi8/openjdk-21:latest
+    ✓ SBOM of image already cached, 288 packages indexed
+    ✗ Detected 3 vulnerable packages with a total of 5 vulnerabilities
+
+
+## Overview
+
+                    │                   Analyzed Image                     
+────────────────────┼──────────────────────────────────────────────────────
+  Target            │  registry.access.redhat.com/ubi8/openjdk-21:latest   
+    digest          │  80be32f2c910                                        
+    platform        │ linux/amd64                                          
+    vulnerabilities │    0C     3H     1M     1L                           
+    size            │ 182 MB                                               
+    packages        │ 288                                                  
+
+
+## Packages and Vulnerabilities
+
+   0C     2H     0M     0L  setuptools 39.2.0
+pkg:pypi/setuptools@39.2.0
+
+    ✗ HIGH CVE-2022-40897 [Inefficient Regular Expression Complexity]
+      https://scout.docker.com/v/CVE-2022-40897
+      Affected range : <65.5.1                                                          
+      Fixed version  : 65.5.1                                                           
+      CVSS Score     : 8.7                                                              
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:L/SI:L/SA:N  
+    
+    ✗ HIGH CVE-2024-6345 [Improper Control of Generation of Code ('Code Injection')]
+      https://scout.docker.com/v/CVE-2024-6345
+      Affected range : <70.0.0                                                          
+      Fixed version  : 70.0.0                                                           
+      CVSS Score     : 7.5                                                              
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:A/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N  
+    
+
+   0C     1H     0M     0L  commons-io/commons-io 2.11.0
+pkg:maven/commons-io/commons-io@2.11.0
+
+    ✗ HIGH CVE-2024-47554 [Uncontrolled Resource Consumption]
+      https://scout.docker.com/v/CVE-2024-47554
+      Affected range : >=2.0                                                            
+                     : <2.14.0                                                          
+      Fixed version  : 2.14.0                                                           
+      CVSS Score     : 8.7                                                              
+      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:N  
+    
+
+   0C     0H     1M     1L  com.google.guava/guava 31.0.1-jre
 ```
 
 
