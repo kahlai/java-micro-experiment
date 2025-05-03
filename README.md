@@ -45,9 +45,9 @@ Example output:
 ```
 quay.io/kahlai/java-micro                             ubi9                 434cd5214844   2 hours ago    188MB
 ```
-Smaller compare to:
+This is around 190-250MB Smaller compare to the ubi openjdk and openjdk runtimes
 ```
-registry.access.redhat.com/ubi8/openjdk-21            latest               80be32f2c910   2 weeks ago    431MB
+registry.access.redhat.com/ubi9/openjdk-21            latest               e41d4e729db4   4 days ago     416MB
 registry.access.redhat.com/ubi9/openjdk-21-runtime    latest               05cd510cc015   4 days ago     381MB
 ```
 
@@ -99,7 +99,7 @@ docker build --platform linux/amd64  -t quay.io/kahlai/sample-app:ubi9-native -f
 ```
 
 
-2. Inspect and see the size of the sample app images
+2. Inspect and see the size of the sample app images. The output show that by using native compilation it reduce size from 204MB to 77.4MB thanks for GraalVM/Mandrel native compilation.
 ```
 docker images | grep sample-app
 ```
@@ -129,6 +129,14 @@ __  ____  __  _____   ___  __ ____  ______
 ## Comparing the docker scout scan result
 Scan CVE using docker scout
 
+| Image                                                     | Number of Package | CVE Found |
+| --------------------------------------------------------- | ----------------- | --------- |
+| quay.io/kahlai/java-micro:ubi9                            | 29                | 0         |
+| registry.access.redhat.com/ubi9/openjdk-21-runtime:latest | 170               | 0         |
+| registry.access.redhat.com/ubi9/openjdk-21:latest         | 288               | 3         |
+
+
+### Detail Steps
 For ubi9 micro + jre
 ```
 docker scout cves quay.io/kahlai/java-micro:ubi9
@@ -169,44 +177,27 @@ docker scout cves registry.access.redhat.com/ubi9/openjdk-21-runtime:latest
     packages        │ 170
 ```
 
-For red hat official ubi8 openjdk21
+For red hat official ubi9 openjdk21
 ```
-docker scout cves registry.access.redhat.com/ubi8/openjdk-21:latest
-    ✓ SBOM of image already cached, 288 packages indexed
-    ✗ Detected 3 vulnerable packages with a total of 5 vulnerabilities
+docker scout cves registry.access.redhat.com/ubi9/openjdk-21:latest
+    ✓ Image stored for indexing
+    ✓ Indexed 288 packages
+    ✗ Detected 2 vulnerable packages with a total of 3 vulnerabilities
 
 
 ## Overview
 
                     │                   Analyzed Image                     
 ────────────────────┼──────────────────────────────────────────────────────
-  Target            │  registry.access.redhat.com/ubi8/openjdk-21:latest   
-    digest          │  80be32f2c910                                        
+  Target            │  registry.access.redhat.com/ubi9/openjdk-21:latest   
+    digest          │  e41d4e729db4                                        
     platform        │ linux/amd64                                          
-    vulnerabilities │    0C     3H     1M     1L                           
-    size            │ 182 MB                                               
+    vulnerabilities │    0C     1H     1M     1L                           
+    size            │ 172 MB                                               
     packages        │ 288                                                  
 
 
 ## Packages and Vulnerabilities
-
-   0C     2H     0M     0L  setuptools 39.2.0
-pkg:pypi/setuptools@39.2.0
-
-    ✗ HIGH CVE-2022-40897 [Inefficient Regular Expression Complexity]
-      https://scout.docker.com/v/CVE-2022-40897
-      Affected range : <65.5.1                                                          
-      Fixed version  : 65.5.1                                                           
-      CVSS Score     : 8.7                                                              
-      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H/SC:L/SI:L/SA:N  
-    
-    ✗ HIGH CVE-2024-6345 [Improper Control of Generation of Code ('Code Injection')]
-      https://scout.docker.com/v/CVE-2024-6345
-      Affected range : <70.0.0                                                          
-      Fixed version  : 70.0.0                                                           
-      CVSS Score     : 7.5                                                              
-      CVSS Vector    : CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:A/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N  
-    
 
    0C     1H     0M     0L  commons-io/commons-io 2.11.0
 pkg:maven/commons-io/commons-io@2.11.0
@@ -221,6 +212,30 @@ pkg:maven/commons-io/commons-io@2.11.0
     
 
    0C     0H     1M     1L  com.google.guava/guava 31.0.1-jre
+pkg:maven/com.google.guava/guava@31.0.1-jre
+
+    ✗ MEDIUM CVE-2023-2976 [Creation of Temporary File in Directory with Insecure Permissions]
+      https://scout.docker.com/v/CVE-2023-2976
+      Affected range : >=1.0                                         
+                     : <32.0.0-android                               
+      Fixed version  : 32.0.0-android                                
+      CVSS Score     : 5.5                                           
+      CVSS Vector    : CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N  
+    
+    ✗ LOW CVE-2020-8908 [Improper Handling of Alternate Encoding]
+      https://scout.docker.com/v/CVE-2020-8908
+      Affected range : <32.0.0-android                               
+      Fixed version  : 32.0.0-android                                
+      CVSS Score     : 3.3                                           
+      CVSS Vector    : CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N  
+    
+
+
+3 vulnerabilities found in 2 packages
+  CRITICAL  0  
+  HIGH      1  
+  MEDIUM    1  
+  LOW       1  
 ```
 
 
