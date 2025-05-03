@@ -5,11 +5,37 @@ The more things we pack inside a container image and deploy in production enviro
 
 
 ## Folder Structure
-
-/code-with-quarkus - Folder container sample quarkus REST application
-Dockerfile.base - Docker file to build container image by simply copy jre into standard UBI micro
-Dockerfile.jre - Docker file to build sample java app and copy into the above base image.
-Dockerfile.native - Docker file to build a sample quarkus native executable app and copy into standard UBI micro
+```
+.
+├── Dockerfile.base - Docker file to build container image by copy jre into standard UBI micro
+├── Dockerfile.jre - Docker file to build sample java app and copy into the above base image.
+├── Dockerfile.native - Docker file to build sample quarkus native executable app
+├── README.md
+└── code-with-quarkus - Folder container sample quarkus REST application
+    ├── README.md
+    ├── mvnw
+    ├── mvnw.cmd
+    ├── pom.xml
+    └── src
+        ├── main
+        │   ├── docker
+        │   │   ├── Dockerfile.jvm
+        │   │   ├── Dockerfile.legacy-jar
+        │   │   ├── Dockerfile.native
+        │   │   └── Dockerfile.native-micro
+        │   ├── java
+        │   │   └── org
+        │   │       └── acme
+        │   │           └── GreetingResource.java
+        │   └── resources
+        │       └── application.properties
+        └── test
+            └── java
+                └── org
+                    └── acme
+                        ├── GreetingResourceIT.java
+                        └── GreetingResourceTest.java
+```
 
 ## Steps to reproduce the experiment. 
 
