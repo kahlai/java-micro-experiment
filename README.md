@@ -129,7 +129,7 @@ __  ____  __  _____   ___  __ ____  ______
 ## Comparing the docker scout scan result
 Scan CVE using docker scout
 
-| Image                                                     | Number of Package | CVE Found |
+| Image                                                     | Number of packages | CVE Found |
 | --------------------------------------------------------- | ----------------- | --------- |
 | quay.io/kahlai/java-micro:ubi9                            | 29                | 0         |
 | registry.access.redhat.com/ubi9/openjdk-21-runtime:latest | 170               | 0         |
