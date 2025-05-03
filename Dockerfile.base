@@ -1,0 +1,16 @@
+# docker build --platform linux/amd64 -t java-micro -f Dockerfile.base . 
+#FROM registry.redhat.io/ubi8-micro:8.10-24
+FROM registry.access.redhat.com/ubi8-micro:8.10-24
+#FROM  registry.access.redhat.com/ubi9/ubi-micro:9.5
+
+ENV JAVA_HOME=/opt/java/jre/
+ENV PATH=$PATH:/opt/java/jre/bin
+
+# Note : Use ansible redhat_csp_download module to download from access.redhat.com
+# EXAMPLES = '''
+#- name: Download JRE Zip
+# redhat_csp_download: username=foo password=bar url=https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=107780 dest=/tmp/jre21.zip
+
+RUN mkdir -p /opt/java/jre/
+
+COPY jre /opt/java/jre/

@@ -1,0 +1,43 @@
+# docker build --platform linux/amd64  -t java-native -f Dockerfile.native .
+FROM registry.redhat.io/quarkus/mandrel-for-jdk-21-rhel8:23.1-19.1744737236 AS build
+#FROM quay.io/quarkus/ubi-quarkus-mandrel-builder-image:jdk-21 AS build
+
+USER 1001
+
+WORKDIR /project
+
+COPY --chown=1001:0 ./code-with-quarkus /project
+
+RUN ./mvnw clean package -Dnative -DskipTests
+
+# Static linking require musl and not recommended for Production
+#-Dquarkus.native.additional-build-args="--static","--libc=musl"
+
+
+#docker run --platform linux/amd64 --rm -p 8080:8080 java-native
+#Final image with only micro and native executable
+#FROM registry.access.redhat.com/ubi8-micro:8.10-24
+FROM registry.access.redhat.com/ubi9/ubi-micro:9.5
+
+#https://stackoverflow.com/questions/69638431/creating-quarkus-docker-container-with-mandrel-fails
+COPY --from=build \
+   /lib64/libz.so.1 \
+   /lib64/libstdc++.so.6 \
+   /lib64/libgcc_s.so.1 \
+   /lib64/libbz2.so.1 \
+   /lib64/libm.so.6 \
+   /lib64/libbz2.so.1 \
+   /lib64/libexpat.so.1 \
+   /lib64/libuuid.so.1 \
+   /lib64/
+
+RUN mkdir -p /app/
+
+WORKDIR /app/
+
+COPY --from=build /project/target/code-with-quarkus-1.0.0-SNAPSHOT-runner .
+
+EXPOSE 8080
+
+ENTRYPOINT [ "/app/code-with-quarkus-1.0.0-SNAPSHOT-runner" ]
+

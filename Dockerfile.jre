@@ -1,0 +1,22 @@
+# docker build --platform linux/amd64 -t java-app -f Dockerfile.jre .  
+FROM registry.access.redhat.com/ubi8/openjdk-21:latest AS build
+
+USER 1001
+
+WORKDIR /project
+
+COPY --chown=1001:0 ./code-with-quarkus /project
+
+RUN ./mvnw clean package -DskipTests
+
+# Using the image with jre only
+FROM quay.io/kahlai/java-micro:ubi9
+
+WORKDIR /app/
+
+COPY --from=build /project/target/quarkus-app/ .
+
+EXPOSE 8080
+
+ENTRYPOINT [ "java", "-jar" ,"/app/quarkus-run.jar" ]
+
