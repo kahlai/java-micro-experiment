@@ -241,4 +241,4 @@ pkg:maven/com.google.guava/guava@31.0.1-jre
 
 ## Conclusion
 We have successfully run a simple quarkus java application using UBI Micro and JRE.
-Size and attack surface is reduced to UBI micro packages + JRE itself. 
+Size and attack surface is reduced to UBI micro packages + JRE itself. Disclaimer: This is pure personal exploration and is not recommended to try in production without thorough testing.
