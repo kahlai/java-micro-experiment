@@ -94,7 +94,7 @@ Hello from Quarkus REST%
 ### Build and run quarkus app using Native Compilation
 
 1. Build the code to test the images with Native Compilation.
-```
+```console
 docker build --platform linux/amd64  -t quay.io/kahlai/sample-app:ubi9-native -f Dockerfile.native .
 ```
 
