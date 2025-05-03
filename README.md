@@ -127,8 +127,7 @@ __  ____  __  _____   ___  __ ____  ______
 
 
 ## Comparing the docker scout scan result
-
-8. Scan CVE using docker scout
+Scan CVE using docker scout
 
 For ubi9 micro + jre
 ```
